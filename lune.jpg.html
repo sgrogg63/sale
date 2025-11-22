@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenue, Pierre</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url('lune.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      padding-top: 10vh;
+    }
+    h1 { font-size: 3em; }
+    #clock { font-size: 2em; margin: 1em 0; }
+    .quote { font-style: italic; margin: 1em auto; max-width: 600px; }
+    .links a {
+      margin: 0 15px;
+      color: #ffcccc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .search-bar { margin-top: 2em; }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: none;
+    }
+    .weather {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 1em;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bienvenue, Pierre</h1>
+  <div id="clock"></div>
+  <div class="quote">"Le succès n'est pas final. L'échec n'est pas fatal. C'est le courage de continuer qui compte."<br>— Winston Churchill</div>
+  <div class="links">
+    <a href="https://www.google.com">Google</a>
+    <a href="https://www.youtube.com">YouTube</a>
+    <a href="https://fr.wikipedia.org">Wikipedia</a>
+    <a href="https://www.lemonde.fr">Le Monde</a>
+  </div>
+  <div class="search-bar">
+    <form action="https://www.google.com/search" method="get">
+      <input type="text" name="q" placeholder="Rechercher...">
+    </form>
+  </div>
+  <div class="weather" id="weather">Royat — météo en cours...</div>
+
+  <script>
+    // Horloge dynamique
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      const day = now.toLocaleDateString('fr-FR', { weekday: 'long' });
+      document.getElementById('clock').textContent = `${day} ${time}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Météo via OpenWeatherMap
+    async function fetchWeather() {
+      const apiKey = 'TA_CLE_API_ICI'; // Mets ta clé API ici
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=Royat,FR&units=metric&lang=fr&appid=${apiKey}`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const temp = Math.round(data.main.temp);
+        const icon = data.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${icon}.png`;
+        document.getElementById('weather').innerHTML = `Royat ${temp}°C <img src="${iconUrl}" alt="météo">`;
+      } catch (error) {
+        document.getElementById('weather').textContent = "Royat — météo indisponible";
+      }
+    }
+    fetchWeather();
+  </script>
+</body>
+</html>
+
